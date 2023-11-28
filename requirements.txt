@@ -1,0 +1,9 @@
+# Required by CLIP
+ftfy
+regex
+tqdm
+# Required for the server
+fastapi
+uvicorn
+# required for testing
+python-dotenv
