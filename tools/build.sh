@@ -1,0 +1,1 @@
+DOCKER_BUILDKIT=1 docker build -t nhtlongcs/clip-embed:latest -f docker/Dockerfile .

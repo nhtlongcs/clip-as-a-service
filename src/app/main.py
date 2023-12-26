@@ -6,13 +6,11 @@ from PIL import Image
 import logging
 from fastapi import FastAPI, File, UploadFile
 
-from dtypes import FeatureModel, TextModel, TextsModel, ImageListModel, ImageModel, ImageUrlModel
+from src.schema.dtypes import FeatureModel, TextModel, TextsModel, ImageListModel, ImageModel, ImageUrlModel
 from typing import Dict, List, Annotated
-from utils import openImageb64
 from io import BytesIO
 
 app = FastAPI()
-import aiofiles
 
 @app.on_event("startup")
 async def on_startup():
