@@ -3,22 +3,24 @@ import requests
 import torch
 import clip
 from PIL import Image
-from fastapi import FastAPI
 import logging
+from fastapi import FastAPI, File, UploadFile
 
 from dtypes import FeatureModel, TextModel, TextsModel, ImageListModel, ImageModel, ImageUrlModel
-from typing import Dict
-from io import BytesIO
+from typing import Dict, List, Annotated
 from utils import openImageb64
+from io import BytesIO
+
 app = FastAPI()
+import aiofiles
 
 @app.on_event("startup")
 async def on_startup():
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    
+
     if device != "cuda": 
         logging.warning("CLIP not running on CUDA!")
-        
+
     model_name = "ViT-L/14@336px"
     model, preprocess = clip.load(model_name, device=device)
     logging.info(f"CLIP {model_name} successfully loaded")
@@ -60,8 +62,8 @@ def encode_texts(data: TextsModel) -> FeatureModel:
     return FeatureModel.from_numpy(features)
 
 @app.post("/api/image")
-def encode_image_b64(data: ImageModel) -> FeatureModel:
-    image = openImageb64(data.imageb64)
+async def encode_image(data: Annotated[bytes, File()]) -> FeatureModel:
+    image = Image.open(BytesIO(data)).convert('RGB')
     image = app.state.preprocesor(image).unsqueeze(0).to(app.state.device)
     with torch.no_grad():
         image_feature = app.state.model.encode_image(image)
@@ -85,8 +87,11 @@ def encode_image_url(data: ImageUrlModel) -> FeatureModel:
 
 
 @app.post("/api/images")
-def encode_images(data: ImageListModel) -> FeatureModel:
-    images = [openImageb64(im_file) for im_file in data.imageb64_ls]
+async def encode_images(data: list[bytes]=File()) -> FeatureModel:
+    images = []
+    for im_data in data:
+        if im_data == b'': continue
+        images.append(Image.open(BytesIO(im_data)))
     images = torch.stack([
         app.state.preprocesor(image) for image in images
     ]).to(app.state.device)
