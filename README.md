@@ -1,6 +1,6 @@
 ## CLIP-as-a-Service
 
-A Minimal Embedding Framework for Extracting Embeddings for Images and Sentences with CLIP. It simplifies the process of embedding extraction, providing ready-to-use functions for both batch and single instance embedding tasks. The framework eliminates the need for extensive technical expertise, making it accessible to a wider range of users.
+A Minimal Embedding Framework for Extracting Embeddings for Images and Sentences with CLIP. It simplifies the process of embedding extraction, providing ready-to-use functions for both batch and single-instance embedding tasks. The framework eliminates the need for extensive technical expertise, making it accessible to a wider range of users.
 
 ## Getting Started with CLIP-as-a-service
 
@@ -129,7 +129,7 @@ _CLIP-as-a-service_ finds its application in various domains, including:
 
 **ReID (Person Re-identification)**: _CLIP-as-a-service_ can be used to extract embeddings for person images, enabling accurate re-identification of individuals across different camera views.
 
-**Senabtuc Content Retrieval**: _CLIP-as-a-service_ facilitates image retrieval tasks by extracting embeddings that capture semantic similarities between images. This enables efficient retrieval of relevant images based on a query image.
+**Semantic Content Retrieval**: _CLIP-as-a-service_ facilitates image retrieval tasks by extracting embeddings that capture semantic similarities between images. This enables efficient retrieval of relevant images based on a query image.
 
 ## Conclusion
 
