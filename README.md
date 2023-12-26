@@ -2,19 +2,29 @@
 
 A Minimal Embedding Framework for Extracting Embeddings for Images and Sentences with CLIP. It simplifies the process of embedding extraction, providing ready-to-use functions for both batch and single instance embedding tasks. The framework eliminates the need for extensive technical expertise, making it accessible to a wider range of users.
 
-## Getting Started
+## Getting Started with CLIP-as-a-service
 
-To embark on your journey with _CLIP-as-a-service_, follow these simple steps:
+Here's how to get CLIP-as-a-service up and running for both production and development environments:
 
-### Installation
-
-Install _CLIP-as-a-service_ using the bellow installation instructions.
+**For Production:**
 
 ```bash
-$ cd this-repo
-$ DOCKER_BUILDKIT=1 docker build -t nhtlongcs/first-clip:latest services/clip-embedding/
-$ #config and rename .env.dev to .env
-$ docker-compose up -d # Start the _CLIP-as-a-service_ server to enable embedding extraction
+$ cd this-repo # Navigate to the project directory:
+# Configure your environment settings by renaming the `.env.dev` file to `.env`.
+$ sh tools/build.sh # Build the service
+$ sh tools/start_svc.sh # Start the service
+```
+Once the service is running, you can interact with it using REST APIs.
+
+**For Development:**
+
+```bash
+# Follow steps 1 and 2 from the production setup.
+$ sh tools/dev_docker.sh # Start the development environment using Docker
+# The above line will mount your local environment within a Docker container.
+# After entering the container, initiate development using `tmux` and the provided script
+$ tmux
+$ sh tools/serve_manually.sh
 ```
 
 ### Documentation
@@ -30,30 +40,84 @@ Here are some illustrative examples of using _CLIP-as-a-service_:
 <td>
 
 ```bash
-curl \
--X POST http://localhost:{CLIP_PORT} \
+curl -X 'POST' \
+'http://localhost:{CLIP_PORT}/api/text/' \
+-H 'accept: application/json' \
 -H 'Content-Type: application/json' \
--d
+-d '{
+"text": "a man with a white hat"
+}'
 ```
 
 </td>
 <td>
 
 ```python
-# python example
+import request
+url = f"http://localhost:{CLIP_PORT}/api/text/"
+response = requests.post(url, json={"text": text})
+response = response.json() 
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+```bash
+curl -X 'POST' \
+'http://localhost:{CLIP_PORT}/api/image' \
+-H 'accept: application/json' \
+-H 'Content-Type: multipart/form-data' \
+-F 'data=@IMG.png;type=image/png'
+```
+</td>
+<td>
+
+```python
+import request
+url = f"http://localhost:{CLIP_PORT}/api/image/"
+response = requests.post(url=url, files=[('data', open(filepath, 'rb'))])
+response = response.json() 
+```
+</td>
+</tr>
+<tr>
+<td>
+
+```bash
+curl -X 'POST' \
+'http://localhost:{CLIP_PORT}/api/image/url' \
+-H 'accept: application/json' \
+-H 'Content-Type: application/json' \
+-d '{
+  "url": "https://res.cloudinary.com/demo/basketball_shot.jpg"
+}'
+```
+
+</td>
+<td>
+
+```python
+import request
+image_url = 'https://res.cloudinary.com/demo/basketball_shot.jpg'
+url = f"http://localhost:{CLIP_PORT}/api/image/url/"
+response = requests.post(url, json={"url": image_url})
+response = response.json() 
 ```
 
 </td>
 </tr>
 </table>
 
+We also offer a batch mode for rapid processing of multiple items. For more details, please refer to the Swagger documentation.
+
 ## Key Features
 
-**Ready-to-Use Functions**: _CLIP-as-a-service_ eliminates the need for complex code or intricate model configurations. It provides ready-to-use functions for both batch and single instance embedding tasks, simplifying the process of embedding extraction.
+**Ready-to-Use Functions**: _CLIP-as-a-service_ eliminates the need for complex code or intricate model configurations. It provides ready-to-use functions for both batch and single-instance embedding tasks, simplifying the process of embedding extraction.
 
 **HTTPS Connection with FastAPI**: _CLIP-as-a-service_ supports HTTPS connections, enabling secure communication with your HTTP client of choice. This ensures the confidentiality and integrity of data during embedding extraction.
-
-**Strong Community Support**: _CLIP-as-a-service_ benefits from a vibrant and supportive community of users and developers. This ensures prompt assistance and ongoing contributions to the framework's development.
 
 **Easy Scalability with Docker**: _CLIP-as-a-service_ can be seamlessly scaled using Docker containers, making it suitable for handling large workloads efficiently. This allows for effortless deployment and management of embedding extraction tasks.
 
@@ -63,9 +127,9 @@ curl \
 
 _CLIP-as-a-service_ finds its application in various domains, including:
 
-ReID (Person Re-identification): _CLIP-as-a-service_ can be used to extract embeddings for person images, enabling accurate re-identification of individuals across different camera views.
+**ReID (Person Re-identification)**: _CLIP-as-a-service_ can be used to extract embeddings for person images, enabling accurate re-identification of individuals across different camera views.
 
-Image Retrieval: _CLIP-as-a-service_ facilitates image retrieval tasks by extracting embeddings that capture semantic similarities between images. This enables efficient retrieval of relevant images based on a query image.
+**Senabtuc Content Retrieval**: _CLIP-as-a-service_ facilitates image retrieval tasks by extracting embeddings that capture semantic similarities between images. This enables efficient retrieval of relevant images based on a query image.
 
 ## Conclusion
 
@@ -73,5 +137,5 @@ _CLIP-as-a-service_ stands out as a user-friendly embedding framework, providing
 
 ## Acknowledgments
 
-- [OpenAI CLIP]()
+- Original work [OpenAI CLIP]()
 - Inspired by [Jina AI: Clip-as-Service]()
