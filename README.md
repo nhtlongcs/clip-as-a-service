@@ -111,7 +111,7 @@ response = response.json()
 </tr>
 </table>
 
-We also offer a batch mode for rapid processing of multiple items. For more details, please refer to the Swagger documentation.
+We also offer a batch mode for rapid processing of multiple items. For more details, please refer to the Swagger documentation at `http://localhost:{CLIP_PORT}/docs`.
 
 ## Key Features
 
