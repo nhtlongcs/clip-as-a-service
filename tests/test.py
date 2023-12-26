@@ -40,13 +40,6 @@ def test_encode_image_url(image_url="https://upload.wikimedia.org/wikipedia/comm
     assert response['feature'] is not None
     return response['feature']
 
-def PIL2b64(img):
-    im_file = BytesIO()
-    img.save(im_file, format="JPEG")
-    im_bytes = im_file.getvalue()  
-    im_b64 = base64.b64encode(im_bytes)
-    return im_b64.decode()
-
 
 def test_encode_single_image(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
     api = f"api/image/"
