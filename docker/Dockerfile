@@ -68,8 +68,9 @@ RUN conda init bash
 RUN pip install git+https://github.com/openai/CLIP.git 
 RUN python -c "import clip; clip.load('$CLIP_VERSION', device='cpu')"
 
-COPY ./* $WORKDIR
+COPY ./requirements.txt $WORKDIR
 RUN pip install -r requirements.txt
 
+COPY . $WORKDIR
 
 

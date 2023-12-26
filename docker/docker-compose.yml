@@ -7,7 +7,7 @@ services:
       - .env
     ports:
      - "${CLIP_PORT}:${CLIP_PORT}"
-    command: ["uvicorn", "main:app", "--reload", "--port", "${CLIP_PORT}", "--host", "0.0.0.0"]
+    command: ["uvicorn", "src.app.main:app", "--port", "${CLIP_PORT}", "--host", "0.0.0.0"]
     deploy:
       resources:
         reservations:
