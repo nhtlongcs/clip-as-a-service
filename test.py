@@ -48,13 +48,12 @@ def PIL2b64(img):
     im_b64 = base64.b64encode(im_bytes)
     return im_b64.decode()
 
-def test_encode_single_image(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
+def test_encode_single_image_old(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
     api = f"api/image/"
     url = f"http://localhost:{CLIP_PORT}/{api}"
     image = Image.open(requests.get(image_url, stream=True).raw).convert('RGB')
     imageb64 = PIL2b64(img=image)
     response = requests.post(url, json={"imageb64": imageb64})
-    
     response = response.json() 
     print(response)
     # assert response.status_code == 201, f"Request on {url} failed"
@@ -62,7 +61,7 @@ def test_encode_single_image(image_url="https://upload.wikimedia.org/wikipedia/c
     return response['feature']
 
 
-def test_encode_batch_image(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
+def test_encode_batch_image_old(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
     api = f"api/images"
     url = f"http://localhost:{CLIP_PORT}/{api}"
     image = Image.open(requests.get(image_url, stream=True).raw).convert('RGB')
@@ -76,9 +75,36 @@ def test_encode_batch_image(image_url="https://upload.wikimedia.org/wikipedia/co
     return response['feature']
 
 
+def test_encode_single_image(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
+    api = f"api/image/"
+    url = f"http://localhost:{CLIP_PORT}/{api}"
+    image_bytes = requests.get(image_url, stream=True).raw
+    response = requests.post(url=url, files=[('data', image_bytes)])
+    response = response.json() 
+    print(response)
+    # assert response.status_code == 201, f"Request on {url} failed"
+    assert response['feature'] is not None
+    return response['feature']
+
+
+def test_encode_batch_image(image_url="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Python-logo-notext.svg/1200px-Python-logo-notext.svg.png"):
+    api = f"api/images"
+    import copy
+    url = f"http://localhost:{CLIP_PORT}/{api}"
+    files = [] 
+    for i in range(2):
+        image_bytes = requests.get(image_url, stream=True).raw
+        files.append(('data', image_bytes))
+    response = requests.post(url=url, files=files)
+    response = response.json() 
+    print(response)
+    # assert response.status_code == 201, f"Request on {url} failed"
+    assert response['feature'] is not None
+    return response['feature']
+
 if __name__ == "__main__":
-    test_encode_single_text()
-    test_encode_batch_text()
-    test_encode_single_image()
-    test_encode_batch_image()
-    test_encode_image_url()
+    # test_encode_single_text()
+    # test_encode_batch_text()
+    x1=test_encode_single_image()['data']
+    x2=test_encode_image_url()['data']
+    x3=test_encode_batch_image()['data']
