@@ -1,8 +1,8 @@
 version: '3'
 services:
   clip:
-    container_name: first-clip
-    image: nhtlongcs/first-clip:latest
+    container_name: clip-embed
+    image: nhtlongcs/clip-embed:latest
     env_file: 
       - .env
     ports:

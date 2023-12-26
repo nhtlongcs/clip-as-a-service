@@ -1,1 +1,1 @@
-DOCKER_BUILDKIT=1 docker build -t nhtlongcs/first-clip:latest services/clip-embedding/
+DOCKER_BUILDKIT=1 docker build -t nhtlongcs/clip-embed:latest .
